@@ -341,7 +341,7 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
         const SizedBox(height: 8),
         ..._getScheduleForDay(DateTime.now().weekday - 1)
             .map((s) => ClassCard(schedule: s))
-            .toList(),
+            ,
         if (_getScheduleForDay(DateTime.now().weekday - 1).isEmpty)
           _emptyState(Icons.event_available_outlined, 'No classes today'),
       ],
