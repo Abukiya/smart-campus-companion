@@ -5,18 +5,15 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:smart_campus_compaion/main.dart';
+import 'package:smart_campus_compaion/features/auth/login_screen.dart';
 
 void main() {
-  testWidgets('App builds and shows expected texts', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App builds and shows login screen', (WidgetTester tester) async {
+    await tester.pumpWidget(const CampusCompanionApp());
 
-    // Verify that main UI texts are present.
-    expect(find.text('Campus Companion'), findsOneWidget);
-    expect(find.text('Firebase connected ✓'), findsOneWidget);
+    expect(find.byType(LoginScreen), findsOneWidget);
   });
 }
