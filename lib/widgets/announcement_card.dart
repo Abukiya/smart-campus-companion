@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/constants/app_colors.dart';
-import '../models/announcement_model.dart';
+import '../Models/announcement_model.dart';
 
 class AnnouncementCard extends StatelessWidget {
   final AnnouncementModel announcement;
@@ -17,90 +17,105 @@ class AnnouncementCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           color: isUnread ? AppColors.surface : AppColors.white,
           borderRadius: BorderRadius.circular(10),
-          border: Border(
-            left: BorderSide(
-              color: isUrgent ? AppColors.urgent : AppColors.border,
-              width: isUrgent ? 3 : 0.5,
-            ),
-            top: const BorderSide(color: AppColors.border, width: 0.5),
-            right: const BorderSide(color: AppColors.border, width: 0.5),
-            bottom: const BorderSide(color: AppColors.border, width: 0.5),
-          ),
+          border: Border.all(color: AppColors.border, width: 0.5),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Top row: tag + time + unread dot
-              Row(
-                children: [
-                  _categoryTag(),
-                  const Spacer(),
-                  if (isUnread)
-                    Container(
-                      width: 7,
-                      height: 7,
-                      margin: const EdgeInsets.only(right: 6),
-                      decoration: const BoxDecoration(
-                        color: AppColors.primary,
-                        shape: BoxShape.circle,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (isUrgent)
+              Container(
+                width: 3,
+                decoration: const BoxDecoration(
+                  color: AppColors.urgent,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Top row: tag + time + unread dot
+                    Row(
+                      children: [
+                        _categoryTag(),
+                        const Spacer(),
+                        if (isUnread)
+                          Container(
+                            width: 7,
+                            height: 7,
+                            margin: const EdgeInsets.only(right: 6),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        Text(
+                          announcement.timeAgo,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    // Title
+                    Text(
+                      announcement.title,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: isUnread
+                            ? FontWeight.w600
+                            : FontWeight.w500,
+                        color: AppColors.textPrimary,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  Text(
-                    announcement.timeAgo,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.textSecondary,
+                    const SizedBox(height: 3),
+                    // Preview
+                    Text(
+                      announcement.body,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              // Title
-              Text(
-                announcement.title,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight:
-                      isUnread ? FontWeight.w600 : FontWeight.w500,
-                  color: AppColors.textPrimary,
+                    const SizedBox(height: 5),
+                    // Posted by
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person_outline,
+                          size: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 3),
+                        Text(
+                          announcement.postedByName,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 3),
-              // Preview
-              Text(
-                announcement.body,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: AppColors.textSecondary,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 5),
-              // Posted by
-              Row(
-                children: [
-                  const Icon(Icons.person_outline,
-                      size: 11, color: AppColors.textSecondary),
-                  const SizedBox(width: 3),
-                  Text(
-                    announcement.postedByName,
-                    style: const TextStyle(
-                      fontSize: 10,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -135,7 +150,11 @@ class AnnouncementCard extends StatelessWidget {
       ),
       child: Text(
         announcement.categoryLabel,
-        style: TextStyle(fontSize: 10, color: text, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          fontSize: 10,
+          color: text,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }

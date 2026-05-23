@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/schedule_model.dart';
-import '../models/announcement_model.dart';
-import '../models/staff_model.dart';
-import '../models/location_model.dart';
+import '../Models/schedule_model.dart';
+import '../Models/announcement_model.dart';
+import '../Models/staff_model.dart';
+import '../Models/location_model.dart';
 
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -67,12 +67,18 @@ class FirestoreService {
 
     return query.snapshots().map((snap) {
       return snap.docs
-          .map((doc) => AnnouncementModel.fromMap(
-              doc.data() as Map<String, dynamic>, doc.id))
-          .where((a) =>
-              department == null ||
-              a.targetDepartment == 'ALL' ||
-              a.targetDepartment == department)
+          .map(
+            (doc) => AnnouncementModel.fromMap(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            ),
+          )
+          .where(
+            (a) =>
+                department == null ||
+                a.targetDepartment == 'ALL' ||
+                a.targetDepartment == department,
+          )
           .toList();
     });
   }
@@ -136,8 +142,7 @@ class FirestoreService {
           .get();
 
       return snap.docs
-          .map((doc) =>
-              AnnouncementModel.fromMap(doc.data(), doc.id))
+          .map((doc) => AnnouncementModel.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e) {
       return [];
@@ -161,19 +166,23 @@ class FirestoreService {
 
       final snap = await q.get();
       List<StaffModel> list = snap.docs
-          .map((doc) => StaffModel.fromMap(
-              doc.data() as Map<String, dynamic>, doc.id))
+          .map(
+            (doc) =>
+                StaffModel.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+          )
           .toList();
 
       // Filter by search query locally
       if (query != null && query.isNotEmpty) {
         final q2 = query.toLowerCase();
         list = list
-            .where((s) =>
-                s.fullName.toLowerCase().contains(q2) ||
-                s.role.toLowerCase().contains(q2) ||
-                s.department.toLowerCase().contains(q2) ||
-                (s.specialization?.toLowerCase().contains(q2) ?? false))
+            .where(
+              (s) =>
+                  s.fullName.toLowerCase().contains(q2) ||
+                  s.role.toLowerCase().contains(q2) ||
+                  s.department.toLowerCase().contains(q2) ||
+                  (s.specialization?.toLowerCase().contains(q2) ?? false),
+            )
             .toList();
       }
 
@@ -201,7 +210,10 @@ class FirestoreService {
   // ─── LOCATIONS ────────────────────────────────────────
 
   // Get all campus locations
-  Future<List<LocationModel>> getLocations({String? type, String? query}) async {
+  Future<List<LocationModel>> getLocations({
+    String? type,
+    String? query,
+  }) async {
     try {
       Query q = _db.collection('locations');
 
@@ -211,17 +223,23 @@ class FirestoreService {
 
       final snap = await q.get();
       List<LocationModel> list = snap.docs
-          .map((doc) => LocationModel.fromMap(
-              doc.data() as Map<String, dynamic>, doc.id))
+          .map(
+            (doc) => LocationModel.fromMap(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            ),
+          )
           .toList();
 
       if (query != null && query.isNotEmpty) {
         final q2 = query.toLowerCase();
         list = list
-            .where((l) =>
-                l.name.toLowerCase().contains(q2) ||
-                l.buildingCode.toLowerCase().contains(q2) ||
-                (l.description?.toLowerCase().contains(q2) ?? false))
+            .where(
+              (l) =>
+                  l.name.toLowerCase().contains(q2) ||
+                  l.buildingCode.toLowerCase().contains(q2) ||
+                  (l.description?.toLowerCase().contains(q2) ?? false),
+            )
             .toList();
       }
 
@@ -246,8 +264,13 @@ class FirestoreService {
 
   String _getDayName(int weekday) {
     const days = [
-      'monday', 'tuesday', 'wednesday',
-      'thursday', 'friday', 'saturday', 'sunday'
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday',
     ];
     return days[weekday - 1];
   }

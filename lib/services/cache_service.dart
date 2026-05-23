@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../models/announcement_model.dart';
-import '../models/schedule_model.dart';
+import '../Models/announcement_model.dart';
+import '../Models/schedule_model.dart';
 
 class CacheService {
   static const String _scheduleBox = 'schedules';

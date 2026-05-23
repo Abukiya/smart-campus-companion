@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../models/announcement_model.dart';
-import '../../models/user_model.dart';
+import '../../Models/announcement_model.dart';
+import '../../Models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/bottom_nav.dart';

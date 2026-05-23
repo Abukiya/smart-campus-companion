@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../models/schedule_model.dart';
+import '../../Models/schedule_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/bottom_nav.dart';
@@ -14,7 +14,8 @@ class TimetableScreen extends StatefulWidget {
   State<TimetableScreen> createState() => _TimetableScreenState();
 }
 
-class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProviderStateMixin {
+class _TimetableScreenState extends State<TimetableScreen>
+    with SingleTickerProviderStateMixin {
   final _authService = AuthService();
   final _firestoreService = FirestoreService();
 
@@ -26,7 +27,15 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
   String? _department;
 
   final _days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  final _daysFull = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+  final _daysFull = [
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+    'sunday',
+  ];
 
   @override
   void initState() {
@@ -46,7 +55,11 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
     try {
       final user = await _authService.getCurrentUserModel();
       if (user == null) {
-        if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+        if (mounted)
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
         return;
       }
       _userId = user.id;
@@ -60,7 +73,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
 
   List<ScheduleModel> _getScheduleForDay(int dayIndex) {
     final day = _daysFull[dayIndex];
-    final list = _allSchedule.where((s) => s.dayOfWeek.toLowerCase() == day).toList();
+    final list = _allSchedule
+        .where((s) => s.dayOfWeek.toLowerCase() == day)
+        .toList();
     list.sort((a, b) => a.startTime.compareTo(b.startTime));
     return list;
   }
@@ -87,7 +102,10 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
           labelColor: AppColors.primary,
           unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.primary,
-          labelStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+          labelStyle: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
           tabs: const [
             Tab(text: 'Week'),
             Tab(text: 'Calendar'),
@@ -96,7 +114,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
         ),
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primary))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
+            )
           : TabBarView(
               controller: _tabController,
               children: [
@@ -131,17 +151,27 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.chevron_left, color: AppColors.textSecondary),
+                    icon: const Icon(
+                      Icons.chevron_left,
+                      color: AppColors.textSecondary,
+                    ),
                     onPressed: () {},
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
                   Text(
                     _getWeekLabel(),
-                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+                    icon: const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textSecondary,
+                    ),
                     onPressed: () {},
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -166,8 +196,12 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                             _days[i],
                             style: TextStyle(
                               fontSize: 10,
-                              color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                              fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : AppColors.textSecondary,
+                              fontWeight: isSelected
+                                  ? FontWeight.w500
+                                  : FontWeight.normal,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -175,10 +209,15 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                             width: 28,
                             height: 28,
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primary : Colors.transparent,
+                              color: isSelected
+                                  ? AppColors.primary
+                                  : Colors.transparent,
                               shape: BoxShape.circle,
                               border: isToday && !isSelected
-                                  ? Border.all(color: AppColors.primary, width: 1.5)
+                                  ? Border.all(
+                                      color: AppColors.primary,
+                                      width: 1.5,
+                                    )
                                   : null,
                             ),
                             child: Center(
@@ -187,7 +226,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
-                                  color: isSelected ? AppColors.white : AppColors.textPrimary,
+                                  color: isSelected
+                                      ? AppColors.white
+                                      : AppColors.textPrimary,
                                 ),
                               ),
                             ),
@@ -197,7 +238,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                             width: 5,
                             height: 5,
                             decoration: BoxDecoration(
-                              color: hasClasses ? AppColors.warning : Colors.transparent,
+                              color: hasClasses
+                                  ? AppColors.warning
+                                  : Colors.transparent,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -214,7 +257,10 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
         // Schedule list
         Expanded(
           child: schedule.isEmpty
-              ? _emptyState(Icons.event_available_outlined, 'No classes on ${_days[_selectedDayIndex]}')
+              ? _emptyState(
+                  Icons.event_available_outlined,
+                  'No classes on ${_days[_selectedDayIndex]}',
+                )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: schedule.length,
@@ -249,23 +295,41 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(Icons.chevron_left, color: AppColors.textSecondary),
+                  const Icon(
+                    Icons.chevron_left,
+                    color: AppColors.textSecondary,
+                  ),
                   Text(
                     _getMonthLabel(now),
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
                   ),
-                  const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: AppColors.textSecondary,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
               // Day headers
               Row(
                 children: ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-                    .map((d) => Expanded(
-                          child: Text(d,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
-                        ))
+                    .map(
+                      (d) => Expanded(
+                        child: Text(
+                          d,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
               const SizedBox(height: 8),
@@ -284,7 +348,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                   final date = DateTime(now.year, now.month, day);
                   final isToday = day == now.day;
                   final dayOfWeek = _daysFull[date.weekday - 1];
-                  final hasClass = _allSchedule.any((s) => s.dayOfWeek.toLowerCase() == dayOfWeek);
+                  final hasClass = _allSchedule.any(
+                    (s) => s.dayOfWeek.toLowerCase() == dayOfWeek,
+                  );
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -293,7 +359,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                         width: 26,
                         height: 26,
                         decoration: BoxDecoration(
-                          color: isToday ? AppColors.primary : Colors.transparent,
+                          color: isToday
+                              ? AppColors.primary
+                              : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
                         child: Center(
@@ -301,8 +369,12 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                             '$day',
                             style: TextStyle(
                               fontSize: 11,
-                              fontWeight: isToday ? FontWeight.w500 : FontWeight.normal,
-                              color: isToday ? AppColors.white : AppColors.textPrimary,
+                              fontWeight: isToday
+                                  ? FontWeight.w500
+                                  : FontWeight.normal,
+                              color: isToday
+                                  ? AppColors.white
+                                  : AppColors.textPrimary,
                             ),
                           ),
                         ),
@@ -312,7 +384,9 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
                         width: 4,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: hasClass ? (isToday ? AppColors.white : AppColors.primary) : Colors.transparent,
+                          color: hasClass
+                              ? (isToday ? AppColors.white : AppColors.primary)
+                              : Colors.transparent,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -336,12 +410,18 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
         ),
         const SizedBox(height: 16),
         // Today's classes
-        const Text("Today's classes",
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+        const Text(
+          "Today's classes",
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: AppColors.textPrimary,
+          ),
+        ),
         const SizedBox(height: 8),
-        ..._getScheduleForDay(DateTime.now().weekday - 1)
-            .map((s) => ClassCard(schedule: s))
-            ,
+        ..._getScheduleForDay(
+          DateTime.now().weekday - 1,
+        ).map((s) => ClassCard(schedule: s)),
         if (_getScheduleForDay(DateTime.now().weekday - 1).isEmpty)
           _emptyState(Icons.event_available_outlined, 'No classes today'),
       ],
@@ -353,10 +433,38 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
   Widget _buildExamView() {
     // Sample exam data — in production load from Firestore exams collection
     final exams = [
-      _ExamItem('Data Structures', 'CSE-302', 'Mon, May 27', '08:00 – 10:00', 'Hall 1 · Main Block', 5),
-      _ExamItem('Software Engineering', 'CSE-401', 'Thu, May 29', '10:30 – 12:30', 'Hall 2 · Main Block', 7),
-      _ExamItem('Computer Networks', 'CSE-310', 'Fri, May 30', '2:00 – 4:00', 'Room 301 · Block C', 8),
-      _ExamItem('Database Systems', 'CSE-305', 'Mon, Jun 2', '08:00 – 10:00', 'Hall 1 · Main Block', 11),
+      _ExamItem(
+        'Data Structures',
+        'CSE-302',
+        'Mon, May 27',
+        '08:00 – 10:00',
+        'Hall 1 · Main Block',
+        5,
+      ),
+      _ExamItem(
+        'Software Engineering',
+        'CSE-401',
+        'Thu, May 29',
+        '10:30 – 12:30',
+        'Hall 2 · Main Block',
+        7,
+      ),
+      _ExamItem(
+        'Computer Networks',
+        'CSE-310',
+        'Fri, May 30',
+        '2:00 – 4:00',
+        'Room 301 · Block C',
+        8,
+      ),
+      _ExamItem(
+        'Database Systems',
+        'CSE-305',
+        'Mon, Jun 2',
+        '08:00 – 10:00',
+        'Hall 1 · Main Block',
+        11,
+      ),
     ];
 
     return ListView(
@@ -386,38 +494,81 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
           children: [
             SizedBox(
               width: 44,
-              child: Text(exam.time.split('–')[0].trim(),
-                  style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, fontWeight: FontWeight.w500)),
+              child: Text(
+                exam.time.split('–')[0].trim(),
+                style: const TextStyle(
+                  fontSize: 11,
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(exam.courseName,
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+                  Text(
+                    exam.courseName,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
                   const SizedBox(height: 3),
-                  Row(children: [
-                    const Icon(Icons.calendar_today_outlined, size: 11, color: AppColors.textSecondary),
-                    const SizedBox(width: 3),
-                    Text(exam.date, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                  ]),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        size: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        exam.date,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 2),
-                  Row(children: [
-                    const Icon(Icons.door_back_door_outlined, size: 11, color: AppColors.textSecondary),
-                    const SizedBox(width: 3),
-                    Text(exam.venue, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                  ]),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.door_back_door_outlined,
+                        size: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        exam.venue,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.urgentLight,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       'In ${exam.daysUntil} days',
-                      style: const TextStyle(fontSize: 10, color: AppColors.urgent, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: AppColors.urgent,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
@@ -432,22 +583,35 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
   // ─── HELPERS ──────────────────────────────────────────
 
   Widget _emptyState(IconData icon, String label) => Center(
-    child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      const SizedBox(height: 60),
-      Icon(icon, size: 48, color: AppColors.textSecondary),
-      const SizedBox(height: 12),
-      Text(label, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
-    ]),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const SizedBox(height: 60),
+        Icon(icon, size: 48, color: AppColors.textSecondary),
+        const SizedBox(height: 12),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 14, color: AppColors.textSecondary),
+        ),
+      ],
+    ),
   );
 
   Widget _legendItem(Color color, String label, {bool isCircle = false}) => Row(
     children: [
       Container(
-        width: 8, height: 8,
-        decoration: BoxDecoration(color: color, shape: isCircle ? BoxShape.circle : BoxShape.circle),
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(
+          color: color,
+          shape: isCircle ? BoxShape.circle : BoxShape.circle,
+        ),
       ),
       const SizedBox(width: 4),
-      Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+      Text(
+        label,
+        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+      ),
     ],
   );
 
@@ -459,7 +623,20 @@ class _TimetableScreenState extends State<TimetableScreen> with SingleTickerProv
   }
 
   String _getMonthLabel(DateTime date) {
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
     return '${months[date.month - 1]} ${date.year}';
   }
 
@@ -477,5 +654,12 @@ class _ExamItem {
   final String time;
   final String venue;
   final int daysUntil;
-  const _ExamItem(this.courseName, this.courseCode, this.date, this.time, this.venue, this.daysUntil);
+  const _ExamItem(
+    this.courseName,
+    this.courseCode,
+    this.date,
+    this.time,
+    this.venue,
+    this.daysUntil,
+  );
 }

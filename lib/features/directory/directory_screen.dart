@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
-import '../../models/staff_model.dart';
+import '../../Models/staff_model.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/bottom_nav.dart';
 import '../map/map_screen.dart';
