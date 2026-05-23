@@ -1,18 +1,57 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'firebase_options.dart';
+import 'core/theme/app_theme.dart';
+import 'services/cache_service.dart';
+import 'services/notification_service.dart';
+import 'features/auth/login_screen.dart';
+
+// Background FCM handler — must be top-level
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await _initializeFirebase();
+}
+
+Future<void> _initializeFirebase() async {
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    return;
+  }
+
+  final options = DefaultFirebaseOptions.currentPlatform;
+  final isPlaceholder =
+      options.apiKey == 'missing' ||
+      options.appId == 'missing' ||
+      options.projectId == 'missing';
+
+  if (isPlaceholder) {
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(options: options);
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Firebase
+  await _initializeFirebase();
 
-  // Initialize Hive (offline cache)
+  // Background notification handler
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // Hive offline cache
   await Hive.initFlutter();
+  await CacheService.openBoxes();
+
+  // Notification service
+  final notificationService = NotificationService();
+  await notificationService.initialize();
 
   runApp(const CampusCompanionApp());
 }
@@ -25,42 +64,8 @@ class CampusCompanionApp extends StatelessWidget {
     return MaterialApp(
       title: 'Campus Companion',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF1D9E75),
-        ),
-        useMaterial3: true,
-        fontFamily: 'Roboto',
-      ),
-      home: const Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.school, size: 64, color: Color(0xFF1D9E75)),
-              SizedBox(height: 16),
-              Text(
-                'Campus Companion',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xFF085041),
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Firebase connected ✓',
-                style: TextStyle(color: Colors.green),
-              ),
-            ],
-          ),
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      home: const LoginScreen(),
     );
   }
-}
-
-// Backwards-compatible alias expected by tests
-class MyApp extends CampusCompanionApp {
-  const MyApp({super.key});
 }
