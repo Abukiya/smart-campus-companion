@@ -138,13 +138,14 @@ class FirestoreService {
       final snap = await _db
           .collection('announcements')
           .where('posted_by', isEqualTo: staffId)
-          .orderBy('published_at', descending: true)
-          .get();
+          .get(); // remove orderBy for now — it requires a composite index
 
       return snap.docs
           .map((doc) => AnnouncementModel.fromMap(doc.data(), doc.id))
-          .toList();
+          .toList()
+        ..sort((a, b) => b.publishedAt.compareTo(a.publishedAt)); // sort locally
     } catch (e) {
+      print('getMyAnnouncements error: $e');
       return [];
     }
   }

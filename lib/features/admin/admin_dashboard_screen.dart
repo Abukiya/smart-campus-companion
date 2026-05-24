@@ -380,15 +380,18 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   // ─── POST VIEW ────────────────────────────────────────
 
-  Widget _buildPostView() {
-    return PostAnnouncementScreen(
-      user: _user,
-      onPosted: () {
-        setState(() => _currentNavIndex = 0);
-        _loadData();
-      },
-    );
+Widget _buildPostView() {
+  if (_user == null) {
+    return const Center(child: CircularProgressIndicator(color: AppColors.primary));
   }
+  return PostAnnouncementScreen(
+    user: _user,
+    onPosted: () {
+      setState(() => _currentNavIndex = 0);
+      _loadData();
+    },
+  );
+}
 
   // ─── ANALYTICS VIEW ───────────────────────────────────
 
