@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
@@ -36,6 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<AnnouncementModel> _announcements = [];
   bool _isLoading = true;
   bool _isOffline = false;
+  final DateTime _examDate = DateTime.now().add(const Duration(days: 5));
 
   @override
   void initState() {
@@ -116,6 +118,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int get _unreadCount => _announcements.isEmpty
       ? 0
       : _announcements.where((a) => !a.isRead).length;
+
+  Duration get _examCountdown {
+    final diff = _examDate.difference(DateTime.now());
+    return diff.isNegative ? Duration.zero : diff;
+  }
+
+  int get _daysToExam => _examCountdown.inDays;
 
   ScheduleModel? _findNextClass() {
     for (final schedule in _todaySchedule) {
@@ -531,6 +540,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         AppStrings.classesToday,
         Icons.event_available,
         AppColors.primary,
+        onTap: () => _onNavTap(1),
       ),
       const SizedBox(width: 10),
       _statCard(
@@ -538,66 +548,82 @@ class _DashboardScreenState extends State<DashboardScreen> {
         AppStrings.newAlerts,
         Icons.notifications_active,
         AppColors.urgent,
+        onTap: () => _onNavTap(2),
       ),
       const SizedBox(width: 10),
       _statCard(
-        '5',
+        _daysToExam.toString(),
         AppStrings.daysToExam,
         Icons.school_outlined,
         AppColors.warning,
+        onTap: _showExamCountdownSheet,
       ),
     ],
   );
 
-  Widget _statCard(String num, String label, IconData icon, Color accent) =>
-      Expanded(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.border, width: 0.5),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x0A000000),
-                blurRadius: 8,
-                offset: Offset(0, 6),
-              ),
-            ],
+  Widget _statCard(
+    String num,
+    String label,
+    IconData icon,
+    Color accent, {
+    VoidCallback? onTap,
+  }) => Expanded(
+    child: Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.border, width: 0.5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x0A000000),
+            blurRadius: 8,
+            offset: Offset(0, 6),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: accent.withOpacity(0.12),
-                  shape: BoxShape.circle,
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: accent.withOpacity(0.12),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, size: 14, color: accent),
                 ),
-                child: Icon(icon, size: 14, color: accent),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                num,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+                const SizedBox(height: 10),
+                Text(
+                  num,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: AppColors.textSecondary,
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _sectionHeader(String title, VoidCallback onSeeAll) => Row(
     children: [
@@ -755,4 +781,114 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
     );
   }
+
+  Future<void> _showExamCountdownSheet() async {
+    Timer? timer;
+    await showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          timer ??= Timer.periodic(const Duration(seconds: 1), (_) {
+            if (!mounted) return;
+            setState(() {});
+          });
+
+          final remaining = _examCountdown;
+          final days = remaining.inDays;
+          final hours = remaining.inHours.remainder(24);
+          final minutes = remaining.inMinutes.remainder(60);
+          final seconds = remaining.inSeconds.remainder(60);
+
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: SizedBox(
+                    width: 36,
+                    height: 4,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: AppColors.border,
+                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppStrings.daysToExam,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Countdown to your next exam.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _countdownMetric(days.toString(), 'Days'),
+                    _countdownMetric(hours.toString().padLeft(2, '0'), 'Hours'),
+                    _countdownMetric(
+                      minutes.toString().padLeft(2, '0'),
+                      'Minutes',
+                    ),
+                    _countdownMetric(
+                      seconds.toString().padLeft(2, '0'),
+                      'Seconds',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                    ),
+                    child: const Text('Close'),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ).whenComplete(() => timer?.cancel());
+  }
+
+  Widget _countdownMetric(String value, String label) => Expanded(
+    child: Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textPrimary,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+        ),
+      ],
+    ),
+  );
 }
