@@ -23,7 +23,7 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
   String _category = 'general';
   bool _isUrgent = false;
   bool _sendPush = true;
-  bool _scheduleForLater = false;
+  // schedule removed -- no longer supported in UI
   String _targetDept = 'ALL';
   bool _isPosting = false;
   bool _posted = false;
@@ -80,7 +80,7 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
       _category = 'general';
       _isUrgent = false;
       _sendPush = true;
-      _scheduleForLater = false;
+      // schedule removed
       _targetDept = 'ALL';
       _posted = false;
       _studentsNotified = 0;
@@ -221,6 +221,11 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
               decoration: const InputDecoration(
                 hintText: 'Write your full announcement here...',
                 alignLabelWithHint: true,
+                prefixIcon: null,
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
               ),
               maxLines: 5,
               maxLength: 1000,
@@ -295,13 +300,7 @@ class _PostAnnouncementScreenState extends State<PostAnnouncementScreen> {
                     (v) => setState(() => _isUrgent = v),
                   ),
                   const Divider(height: 1),
-                  _toggleRow(
-                    AppStrings.scheduleForLater,
-                    'Set a specific send time',
-                    _scheduleForLater,
-                    (v) => setState(() => _scheduleForLater = v),
-                    isLast: true,
-                  ),
+                  // schedule option removed
                 ],
               ),
             ),
