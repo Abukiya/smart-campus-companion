@@ -28,6 +28,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final _firestoreService = FirestoreService();
   final _cacheService = CacheService();
 
+  static const _navTransitionDuration = Duration(milliseconds: 240);
+
   int _currentNavIndex = 0;
   UserModel? _user;
   List<ScheduleModel> _todaySchedule = [];
@@ -41,52 +43,55 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _loadData();
   }
 
-Future<void> _loadData() async {
-  setState(() => _isLoading = true);
-  try {
-    _user = await _authService.getCurrentUserModel();
-    if (_user == null) {
-      if (mounted) {
-        Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+  Future<void> _loadData() async {
+    setState(() => _isLoading = true);
+    try {
+      _user = await _authService.getCurrentUserModel();
+      if (_user == null) {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginScreen()),
+          );
+        }
+        return;
       }
-      return;
-    }
 
-    // Load schedule safely
-    try {
-      _todaySchedule = await _firestoreService
-          .getTodaySchedule(_user!.id);
+      // Load schedule safely
+      try {
+        _todaySchedule = await _firestoreService.getTodaySchedule(_user!.id);
+      } catch (e) {
+        _todaySchedule = [];
+      }
+
+      // Load announcements safely
+      try {
+        final stream = _firestoreService.getAnnouncementsStream(
+          department: _user!.department,
+        );
+        _announcements = await stream.first.timeout(
+          const Duration(seconds: 5),
+          onTimeout: () => [],
+        );
+      } catch (e) {
+        _announcements = [];
+      }
+
+      // Cache for offline
+      try {
+        await _cacheService.cacheSchedule(_todaySchedule);
+        await _cacheService.cacheAnnouncements(_announcements);
+      } catch (e) {
+        // Cache failure is non-critical
+      }
     } catch (e) {
-      _todaySchedule = [];
+      // Fall back to cache on any error
+      _isOffline = true;
+      _todaySchedule = _cacheService.getCachedSchedule();
+      _announcements = _cacheService.getCachedAnnouncements();
     }
-
-    // Load announcements safely
-    try {
-      final stream = _firestoreService
-          .getAnnouncementsStream(department: _user!.department);
-      _announcements = await stream.first
-          .timeout(const Duration(seconds: 5), onTimeout: () => []);
-    } catch (e) {
-      _announcements = [];
-    }
-
-    // Cache for offline
-    try {
-      await _cacheService.cacheSchedule(_todaySchedule);
-      await _cacheService.cacheAnnouncements(_announcements);
-    } catch (e) {
-      // Cache failure is non-critical
-    }
-
-  } catch (e) {
-    // Fall back to cache on any error
-    _isOffline = true;
-    _todaySchedule = _cacheService.getCachedSchedule();
-    _announcements = _cacheService.getCachedAnnouncements();
+    if (mounted) setState(() => _isLoading = false);
   }
-  if (mounted) setState(() => _isLoading = false);
-}
 
   String _getGreeting() {
     final h = DateTime.now().hour;
@@ -127,9 +132,24 @@ Future<void> _loadData() async {
     if (destinations.containsKey(index)) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => destinations[index]!()),
+        _fadeRoute(destinations[index]!()),
       ).then((_) => setState(() => _currentNavIndex = 0));
     }
+  }
+
+  PageRouteBuilder<void> _fadeRoute(Widget page) {
+    return PageRouteBuilder<void>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: _navTransitionDuration,
+      reverseTransitionDuration: _navTransitionDuration,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+        return FadeTransition(opacity: curved, child: child);
+      },
+    );
   }
 
   Future<void> _logout() async {

@@ -7,6 +7,10 @@ import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/bottom_nav.dart';
 import '../../widgets/announcement_card.dart';
+import '../dashboard/dashboard_screen.dart';
+import '../timetable/timetable_screen.dart';
+import '../map/map_screen.dart';
+import '../directory/directory_screen.dart';
 
 class AnnouncementsScreen extends StatefulWidget {
   const AnnouncementsScreen({super.key});
@@ -18,6 +22,8 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   final _authService = AuthService();
   final _firestoreService = FirestoreService();
   final _searchController = TextEditingController();
+
+  static const _navTransitionDuration = Duration(milliseconds: 240);
 
   UserModel? _user;
   List<AnnouncementModel> _all = [];
@@ -220,12 +226,46 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: BottomNav(
-        currentIndex: 2,
-        onTap: (i) {
-          if (i != 2) Navigator.pop(context);
-        },
-      ),
+      bottomNavigationBar: BottomNav(currentIndex: 2, onTap: _onNavTap),
+    );
+  }
+
+  void _onNavTap(int index) {
+    if (index == 2) return;
+
+    if (index == 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        _fadeRoute(const DashboardScreen()),
+        (route) => false,
+      );
+      return;
+    }
+
+    final destinations = {
+      1: () => const TimetableScreen(),
+      3: () => const MapScreen(),
+      4: () => const DirectoryScreen(),
+    };
+
+    final destination = destinations[index];
+    if (destination == null) return;
+
+    Navigator.pushReplacement(context, _fadeRoute(destination()));
+  }
+
+  PageRouteBuilder<void> _fadeRoute(Widget page) {
+    return PageRouteBuilder<void>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: _navTransitionDuration,
+      reverseTransitionDuration: _navTransitionDuration,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+        return FadeTransition(opacity: curved, child: child);
+      },
     );
   }
 

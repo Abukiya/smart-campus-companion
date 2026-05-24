@@ -5,6 +5,10 @@ import '../../core/constants/app_colors.dart';
 import '../../Models/location_model.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/bottom_nav.dart';
+import '../dashboard/dashboard_screen.dart';
+import '../timetable/timetable_screen.dart';
+import '../announcements/announcements_screen.dart';
+import '../directory/directory_screen.dart';
 
 class MapScreen extends StatefulWidget {
   final String? highlightLocationId;
@@ -24,6 +28,8 @@ class _MapScreenState extends State<MapScreen> {
   final _firestoreService = FirestoreService();
   final _searchController = TextEditingController();
   final _mapController = MapController();
+
+  static const _navTransitionDuration = Duration(milliseconds: 240);
 
   List<LocationModel> _locations = [];
   List<LocationModel> _searchResults = [];
@@ -50,6 +56,45 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
     _loadLocations();
     _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onNavTap(int index) {
+    if (index == 3) return;
+
+    if (index == 0) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        _fadeRoute(const DashboardScreen()),
+        (route) => false,
+      );
+      return;
+    }
+
+    final destinations = {
+      1: () => const TimetableScreen(),
+      2: () => const AnnouncementsScreen(),
+      4: () => const DirectoryScreen(),
+    };
+
+    final destination = destinations[index];
+    if (destination == null) return;
+
+    Navigator.pushReplacement(context, _fadeRoute(destination()));
+  }
+
+  PageRouteBuilder<void> _fadeRoute(Widget page) {
+    return PageRouteBuilder<void>(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionDuration: _navTransitionDuration,
+      reverseTransitionDuration: _navTransitionDuration,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+        return FadeTransition(opacity: curved, child: child);
+      },
+    );
   }
 
   @override
@@ -519,12 +564,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNav(
-        currentIndex: 3,
-        onTap: (i) {
-          if (i != 3) Navigator.pop(context);
-        },
-      ),
+      bottomNavigationBar: BottomNav(currentIndex: 3, onTap: _onNavTap),
     );
   }
 
