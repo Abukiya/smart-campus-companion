@@ -15,11 +15,11 @@ class ClassCard extends StatelessWidget {
     final isCancelled = schedule.isCancelled;
     final isRoomChanged = schedule.isRoomChanged;
 
-    Color borderColor = AppColors.border;
-    if (isNow) borderColor = AppColors.primary;
-    if (isNext) borderColor = AppColors.warning;
-    if (isCancelled) borderColor = AppColors.urgent;
-    if (isRoomChanged) borderColor = AppColors.urgent;
+    Color accent = AppColors.border;
+    if (isNow) accent = AppColors.primary;
+    if (isNext) accent = AppColors.warning;
+    if (isCancelled) accent = AppColors.urgent;
+    if (isRoomChanged) accent = AppColors.urgent;
 
     return GestureDetector(
       onTap: onTap,
@@ -27,65 +27,44 @@ class ClassCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: isCancelled ? AppColors.urgentLight : AppColors.surface,
-          borderRadius: BorderRadius.circular(10),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.border, width: 0.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x0A000000),
+              blurRadius: 10,
+              offset: Offset(0, 6),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              width: 3,
+              width: 4,
               decoration: BoxDecoration(
-                color: borderColor,
+                color: accent,
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
+                  topLeft: Radius.circular(14),
+                  bottomLeft: Radius.circular(14),
                 ),
               ),
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 10, 12, 10),
-                child: Row(
+                padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Time column
-                    SizedBox(
-                      width: 44,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            schedule.startTime,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            schedule.endTime,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-
-                    // Class info
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
                             schedule.courseName,
                             style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
                               color: isCancelled
                                   ? AppColors.urgent
                                   : AppColors.textPrimary,
@@ -94,79 +73,104 @@ class ClassCard extends StatelessWidget {
                                   : null,
                             ),
                           ),
-                          const SizedBox(height: 3),
-                          // Room info
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.door_back_door_outlined,
-                                size: 12,
-                                color: AppColors.textSecondary,
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                isRoomChanged
-                                    ? '${schedule.newRoom} <- changed'
-                                    : '${schedule.room} - ${schedule.building}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: isRoomChanged
-                                      ? AppColors.urgent
-                                      : AppColors.textSecondary,
-                                  fontWeight: isRoomChanged
-                                      ? FontWeight.w500
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ],
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
                           ),
-                          const SizedBox(height: 2),
-                          // Lecturer
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.person_outline,
-                                size: 12,
-                                color: AppColors.textSecondary,
-                              ),
-                              const SizedBox(width: 3),
-                              Text(
-                                schedule.lecturerName,
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.textSecondary,
-                                ),
-                              ),
-                            ],
+                          decoration: BoxDecoration(
+                            color: AppColors.surface,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          const SizedBox(height: 4),
-                          // Status badge
-                          if (isNow)
-                            _badge(
-                              'Now',
-                              AppColors.primaryLight,
-                              AppColors.primaryDark,
+                          child: Text(
+                            '${schedule.startTime} - ${schedule.endTime}',
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.w500,
                             ),
-                          if (isNext && !isNow)
-                            _badge(
-                              'Up next',
-                              AppColors.warningLight,
-                              AppColors.warning,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.door_back_door_outlined,
+                          size: 13,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            isRoomChanged
+                                ? '${schedule.newRoom} • room changed'
+                                : '${schedule.room} • ${schedule.building}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isRoomChanged
+                                  ? AppColors.urgent
+                                  : AppColors.textSecondary,
+                              fontWeight: isRoomChanged
+                                  ? FontWeight.w600
+                                  : FontWeight.normal,
                             ),
-                          if (isCancelled)
-                            _badge(
-                              'Cancelled',
-                              AppColors.urgentLight,
-                              AppColors.urgent,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.person_outline,
+                          size: 13,
+                          color: AppColors.textSecondary,
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            schedule.lecturerName,
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textSecondary,
                             ),
-                          if (isRoomChanged && !isCancelled)
-                            _badge(
-                              'Room changed',
-                              AppColors.urgentLight,
-                              AppColors.urgent,
-                            ),
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        if (isNow)
+                          _badge(
+                            'Now',
+                            AppColors.primaryLight,
+                            AppColors.primaryDark,
+                          ),
+                        if (isNext && !isNow)
+                          _badge(
+                            'Up next',
+                            AppColors.warningLight,
+                            AppColors.warning,
+                          ),
+                        if (isCancelled)
+                          _badge(
+                            'Cancelled',
+                            AppColors.urgentLight,
+                            AppColors.urgent,
+                          ),
+                        if (isRoomChanged && !isCancelled)
+                          _badge(
+                            'Room changed',
+                            AppColors.urgentLight,
+                            AppColors.urgent,
+                          ),
+                      ],
                     ),
                   ],
                 ),

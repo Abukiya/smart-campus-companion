@@ -19,27 +19,34 @@ class AnnouncementCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          color: isUnread ? AppColors.surface : AppColors.white,
-          borderRadius: BorderRadius.circular(10),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.border, width: 0.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x0A000000),
+              blurRadius: 10,
+              offset: Offset(0, 6),
+            ),
+          ],
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (isUrgent)
               Container(
-                width: 3,
+                width: 4,
                 decoration: const BoxDecoration(
                   color: AppColors.urgent,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
+                    topLeft: Radius.circular(14),
+                    bottomLeft: Radius.circular(14),
                   ),
                 ),
               ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.fromLTRB(12, 12, 14, 12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -50,8 +57,8 @@ class AnnouncementCard extends StatelessWidget {
                         const Spacer(),
                         if (isUnread)
                           Container(
-                            width: 7,
-                            height: 7,
+                            width: 8,
+                            height: 8,
                             margin: const EdgeInsets.only(right: 6),
                             decoration: const BoxDecoration(
                               color: AppColors.primary,
@@ -67,12 +74,12 @@ class AnnouncementCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 8),
                     // Title
                     Text(
                       announcement.title,
                       style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: isUnread
                             ? FontWeight.w600
                             : FontWeight.w500,
@@ -81,24 +88,24 @@ class AnnouncementCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 3),
+                    const SizedBox(height: 6),
                     // Preview
                     Text(
                       announcement.body,
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 12,
                         color: AppColors.textSecondary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 8),
                     // Posted by
                     Row(
                       children: [
                         const Icon(
                           Icons.person_outline,
-                          size: 11,
+                          size: 12,
                           color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: 3),
@@ -143,7 +150,7 @@ class AnnouncementCard extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
       decoration: BoxDecoration(
         color: bg,
         borderRadius: BorderRadius.circular(20),

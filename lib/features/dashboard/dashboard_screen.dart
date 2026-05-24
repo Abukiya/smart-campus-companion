@@ -28,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final _cacheService = CacheService();
 
   static const _navTransitionDuration = Duration(milliseconds: 240);
+  static const _pagePadding = EdgeInsets.fromLTRB(16, 12, 16, 24);
 
   int _currentNavIndex = 0;
   UserModel? _user;
@@ -116,6 +117,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ? 0
       : _announcements.where((a) => !a.isRead).length;
 
+  ScheduleModel? _findNextClass() {
+    for (final schedule in _todaySchedule) {
+      if (schedule.isNow()) return schedule;
+    }
+    for (final schedule in _todaySchedule) {
+      if (schedule.isUpNext()) return schedule;
+    }
+    return _todaySchedule.isEmpty ? null : _todaySchedule.first;
+  }
+
   void _onNavTap(int index) {
     if (index == _currentNavIndex) return;
 
@@ -177,29 +188,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: EdgeInsets.zero,
                   children: [
                     if (_isOffline) _offlineBanner(),
+                    _headerSection(),
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: _pagePadding,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _topBar(),
                           ..._urgentAlerts(),
                           _statCards(),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           _sectionHeader(
                             AppStrings.todaySchedule,
                             () => _onNavTap(1),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _scheduleList(),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 24),
                           _sectionHeader(
                             AppStrings.recentAnnouncements,
                             () => _onNavTap(2),
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 10),
                           _announcementList(),
-                          const SizedBox(height: 16),
                         ],
                       ),
                     ),
@@ -229,6 +239,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ),
   );
 
+  Widget _headerSection() => Container(
+    decoration: const BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [AppColors.primaryLight, AppColors.background],
+      ),
+    ),
+    child: Padding(
+      padding: _pagePadding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [_topBar(), const SizedBox(height: 16), _overviewCard()],
+      ),
+    ),
+  );
+
   Widget _topBar() => Row(
     children: [
       Expanded(
@@ -238,8 +265,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Text(
               '${_getGreeting()}, ${_user?.fullName.split(' ').first ?? 'Student'} 👋',
               style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
                 color: AppColors.textPrimary,
               ),
             ),
@@ -282,8 +309,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       GestureDetector(
         onTap: _showProfileMenu,
         child: Container(
-          width: 36,
-          height: 36,
+          width: 38,
+          height: 38,
           decoration: const BoxDecoration(
             color: AppColors.primaryLight,
             shape: BoxShape.circle,
@@ -293,12 +320,145 @@ class _DashboardScreenState extends State<DashboardScreen> {
               _user?.initials ?? '?',
               style: const TextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w600,
                 color: AppColors.primaryDark,
               ),
             ),
           ),
         ),
+      ),
+    ],
+  );
+
+  Widget _overviewCard() {
+    final nextClass = _findNextClass();
+    return Material(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(16),
+      elevation: 0,
+      child: InkWell(
+        onTap: () => _onNavTap(1),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border, width: 0.6),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x14000000),
+                blurRadius: 10,
+                offset: Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryLight,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      _getDayLabel(),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: AppColors.primary,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                AppStrings.todaySchedule,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  _overviewMetric(
+                    _todaySchedule.length.toString(),
+                    AppStrings.classesToday,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            nextClass == null
+                                ? 'No upcoming class'
+                                : nextClass.courseName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            nextClass == null
+                                ? 'Enjoy your free time'
+                                : '${nextClass.startTime} • ${nextClass.room}',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _overviewMetric(String value, String label) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        value,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+          color: AppColors.primary,
+        ),
+      ),
+      Text(
+        label,
+        style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
       ),
     ],
   );
@@ -366,63 +526,98 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _statCards() => Row(
     children: [
-      _statCard(_todaySchedule.length.toString(), AppStrings.classesToday),
-      const SizedBox(width: 8),
-      _statCard(_unreadCount.toString(), AppStrings.newAlerts),
-      const SizedBox(width: 8),
-      _statCard('5', AppStrings.daysToExam),
+      _statCard(
+        _todaySchedule.length.toString(),
+        AppStrings.classesToday,
+        Icons.event_available,
+        AppColors.primary,
+      ),
+      const SizedBox(width: 10),
+      _statCard(
+        _unreadCount.toString(),
+        AppStrings.newAlerts,
+        Icons.notifications_active,
+        AppColors.urgent,
+      ),
+      const SizedBox(width: 10),
+      _statCard(
+        '5',
+        AppStrings.daysToExam,
+        Icons.school_outlined,
+        AppColors.warning,
+      ),
     ],
   );
 
-  Widget _statCard(String num, String label) => Expanded(
-    child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.border, width: 0.5),
-      ),
-      child: Column(
-        children: [
-          Text(
-            num,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
-              color: AppColors.primary,
-            ),
+  Widget _statCard(String num, String label, IconData icon, Color accent) =>
+      Expanded(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.border, width: 0.5),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x0A000000),
+                blurRadius: 8,
+                offset: Offset(0, 6),
+              ),
+            ],
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 10,
-              color: AppColors.textSecondary,
-            ),
-            textAlign: TextAlign.center,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: accent.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 14, color: accent),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                num,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: AppColors.textSecondary,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget _sectionHeader(String title, VoidCallback onSeeAll) => Row(
     children: [
       Text(
         title,
         style: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
           color: AppColors.textPrimary,
         ),
       ),
       const Spacer(),
-      GestureDetector(
-        onTap: onSeeAll,
-        child: const Text(
-          AppStrings.seeAll,
-          style: TextStyle(fontSize: 12, color: AppColors.primary),
+      TextButton(
+        onPressed: onSeeAll,
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          textStyle: const TextStyle(fontSize: 12),
         ),
+        child: const Text(AppStrings.seeAll),
       ),
     ],
   );
@@ -457,18 +652,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
     padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
       color: AppColors.white,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(14),
       border: Border.all(color: AppColors.border, width: 0.5),
+      boxShadow: const [
+        BoxShadow(
+          color: Color(0x0A000000),
+          blurRadius: 8,
+          offset: Offset(0, 6),
+        ),
+      ],
     ),
     child: Center(
       child: Column(
         children: [
-          Icon(icon, size: 32, color: AppColors.textSecondary),
+          Icon(icon, size: 34, color: AppColors.textSecondary),
           const SizedBox(height: 8),
           Text(
             label,
             style: const TextStyle(
-              fontSize: 13,
+              fontSize: 12,
               color: AppColors.textSecondary,
             ),
           ),
