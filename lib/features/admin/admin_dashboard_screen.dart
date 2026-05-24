@@ -34,11 +34,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     try {
       _user = await _authService.getCurrentUserModel();
       if (_user == null) {
-        if (mounted)
+        if (mounted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginScreen()),
           );
+        }
         return;
       }
       _myPosts = await _firestoreService.getMyAnnouncements(_user!.id);
@@ -80,11 +81,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
   Future<void> _logout() async {
     await _authService.logout();
-    if (mounted)
+    if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
+    }
   }
 
   // Analytics computed from posts
@@ -239,7 +241,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         if (_myPosts.isEmpty)
           _emptyPosts()
         else
-          ..._myPosts.take(5).map((post) => _postCard(post)).toList(),
+          ..._myPosts.take(5).map((post) => _postCard(post)),
       ],
     );
   }
@@ -458,7 +460,7 @@ Widget _buildPostView() {
         if (_myPosts.isEmpty)
           _emptyPosts()
         else
-          ..._myPosts.map((post) => _analyticsCard(post)).toList(),
+          ..._myPosts.map((post) => _analyticsCard(post)),
       ],
     );
   }

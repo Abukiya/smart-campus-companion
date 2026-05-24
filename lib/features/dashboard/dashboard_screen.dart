@@ -41,31 +41,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _loadData();
   }
 
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-    try {
-      _user = await _authService.getCurrentUserModel();
-      if (_user == null) {
-        if (mounted)
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const LoginScreen()),
-          );
-        return;
+Future<void> _loadData() async {
+  setState(() => _isLoading = true);
+  try {
+    _user = await _authService.getCurrentUserModel();
+    if (_user == null) {
+      if (mounted) {
+        Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (_) => const LoginScreen()));
       }
-      _todaySchedule = await _firestoreService.getTodaySchedule(_user!.id);
-      _announcements = await _firestoreService
-          .getAnnouncementsStream(department: _user!.department)
-          .first;
+      return;
+    }
+
+    // Load schedule safely
+    try {
+      _todaySchedule = await _firestoreService
+          .getTodaySchedule(_user!.id);
+    } catch (e) {
+      _todaySchedule = [];
+    }
+
+    // Load announcements safely
+    try {
+      final stream = _firestoreService
+          .getAnnouncementsStream(department: _user!.department);
+      _announcements = await stream.first
+          .timeout(const Duration(seconds: 5), onTimeout: () => []);
+    } catch (e) {
+      _announcements = [];
+    }
+
+    // Cache for offline
+    try {
       await _cacheService.cacheSchedule(_todaySchedule);
       await _cacheService.cacheAnnouncements(_announcements);
     } catch (e) {
-      _isOffline = true;
-      _todaySchedule = _cacheService.getCachedSchedule();
-      _announcements = _cacheService.getCachedAnnouncements();
+      // Cache failure is non-critical
     }
-    if (mounted) setState(() => _isLoading = false);
+
+  } catch (e) {
+    // Fall back to cache on any error
+    _isOffline = true;
+    _todaySchedule = _cacheService.getCachedSchedule();
+    _announcements = _cacheService.getCachedAnnouncements();
   }
+  if (mounted) setState(() => _isLoading = false);
+}
 
   String _getGreeting() {
     final h = DateTime.now().hour;
@@ -87,33 +108,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return days[DateTime.now().weekday - 1];
   }
 
-  int get _unreadCount => _announcements.where((a) => !a.isRead).length;
+  int get _unreadCount => _announcements.isEmpty
+      ? 0
+      : _announcements.where((a) => !a.isRead).length;
 
   void _onNavTap(int index) {
     if (index == _currentNavIndex) return;
-    final screens = <Widget?>[
-      null,
-      const TimetableScreen(),
-      const AnnouncementsScreen(),
-      const MapScreen(),
-      const DirectoryScreen(),
-    ];
+
+    final destinations = {
+      1: () => const TimetableScreen(),
+      2: () => const AnnouncementsScreen(),
+      3: () => const MapScreen(),
+      4: () => const DirectoryScreen(),
+    };
+
     setState(() => _currentNavIndex = index);
-    if (screens[index] != null) {
+
+    if (destinations.containsKey(index)) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => screens[index]!),
+        MaterialPageRoute(builder: (_) => destinations[index]!()),
       ).then((_) => setState(() => _currentNavIndex = 0));
     }
   }
 
   Future<void> _logout() async {
     await _authService.logout();
-    if (mounted)
+    if (mounted) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
+    }
   }
 
   @override
@@ -143,8 +169,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                             child: ElevatedButton.icon(
                               onPressed: () async {
-                                final user =
-                                    await _authService.getCurrentUserModel();
+                                final user = await _authService
+                                    .getCurrentUserModel();
                                 if (user != null) {
                                   await DataSeeder.seed(user.id);
                                   _loadData();
@@ -415,24 +441,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   );
 
   Widget _scheduleList() {
-    if (_todaySchedule.isEmpty)
+    if (_todaySchedule.isEmpty) {
       return _emptyCard(Icons.event_available, 'No classes today');
+    }
+    final items = _todaySchedule.take(3).toList();
     return Column(
-      children: _todaySchedule
-          .take(3)
-          .map((s) => ClassCard(schedule: s))
-          .toList(),
+      children: List.generate(
+        items.length,
+        (i) => ClassCard(schedule: items[i]),
+      ),
     );
   }
 
   Widget _announcementList() {
-    if (_announcements.isEmpty)
+    if (_announcements.isEmpty) {
       return _emptyCard(Icons.notifications_none, AppStrings.noAnnouncements);
+    }
+    final items = _announcements.take(3).toList();
     return Column(
-      children: _announcements
-          .take(3)
-          .map((a) => AnnouncementCard(announcement: a))
-          .toList(),
+      children: List.generate(
+        items.length,
+        (i) => AnnouncementCard(announcement: items[i]),
+      ),
     );
   }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_strings.dart';
 import '../../services/auth_service.dart';
-import '../auth/onboarding_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../dashboard/dashboard_screen.dart';
 import '../auth/register_screen.dart';

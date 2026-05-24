@@ -55,11 +55,12 @@ class _TimetableScreenState extends State<TimetableScreen>
     try {
       final user = await _authService.getCurrentUserModel();
       if (user == null) {
-        if (mounted)
+        if (mounted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const LoginScreen()),
           );
+        }
         return;
       }
       _userId = user.id;
