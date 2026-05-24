@@ -7,7 +7,6 @@ import '../../Models/user_model.dart';
 import '../../services/auth_service.dart';
 import '../../services/firestore_service.dart';
 import '../../services/cache_service.dart';
-import '../../services/data_seeder.dart';
 import '../../widgets/bottom_nav.dart';
 import '../../widgets/class_card.dart';
 import '../../widgets/announcement_card.dart';
@@ -184,38 +183,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _topBar(),
-                          // TEMPORARY — remove before presentation
-                          Container(
-                            margin: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                            child: ElevatedButton.icon(
-                              onPressed: () async {
-                                final user = await _authService
-                                    .getCurrentUserModel();
-                                if (user != null) {
-                                  await DataSeeder.seed(user.id);
-                                  _loadData();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        '✓ All data seeded successfully!',
-                                      ),
-                                      backgroundColor: Color(0xFF1D9E75),
-                                    ),
-                                  );
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.cloud_upload_outlined,
-                                size: 16,
-                              ),
-                              label: const Text('Seed test data'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
                           ..._urgentAlerts(),
                           _statCards(),
                           const SizedBox(height: 20),
