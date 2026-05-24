@@ -5,6 +5,7 @@ import '../../services/auth_service.dart';
 import '../auth/onboarding_screen.dart';
 import '../admin/admin_dashboard_screen.dart';
 import '../dashboard/dashboard_screen.dart';
+import '../auth/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -65,6 +66,79 @@ class _LoginScreenState extends State<LoginScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _showForgotPassword() {
+    final emailController = TextEditingController(text: _emailController.text);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 24,
+          right: 24,
+          top: 24,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Reset password',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'Enter your email and we will send you a reset link.',
+              style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                hintText: 'your@astu.edu.et',
+                prefixIcon: Icon(Icons.email_outlined, size: 18),
+              ),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                if (emailController.text.trim().isEmpty) return;
+                try {
+                  await _authService.resetPassword(emailController.text);
+                  if (mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Password reset email sent. Check your inbox.',
+                        ),
+                        backgroundColor: AppColors.primary,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(e.toString()),
+                      backgroundColor: AppColors.urgent,
+                    ),
+                  );
+                }
+              },
+              child: const Text('Send reset link'),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -232,7 +306,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: _showForgotPassword,
                     child: const Text(
                       AppStrings.forgotPassword,
                       style: TextStyle(fontSize: 12, color: AppColors.primary),
@@ -279,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const OnboardingScreen(),
+                                  builder: (_) => const RegisterScreen()
                                 ),
                               );
                             },
