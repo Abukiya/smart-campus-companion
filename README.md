@@ -1,6 +1,6 @@
 # 🎓 Smart Campus Companion
 
-> A Flutter mobile application that replaces fragmented WhatsApp chains with one official campus information system for ASTU students and staff.
+> A Flutter mobile application that replaces fragmented Telegram chains with one official campus information system for ASTU students and staff.
 
 ---
 
