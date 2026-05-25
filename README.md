@@ -442,7 +442,7 @@ Beyond the minimum requirements, the following innovation features were implemen
 
 ## Team
 
-**ASTU — School of Engineering & IT**  
+**ASTU**  
 Multi-Platform Software Development for Real-World Problems (CSE)  
 Problem 1: Smart Campus Companion
 
