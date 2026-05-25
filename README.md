@@ -1,6 +1,4 @@
-<div align="center">
 
-<img src="docs/screenshots/screen_login.jpg" width="180" alt="Campus Companion Logo"/>
 
 # 🎓 Smart Campus Companion
 
