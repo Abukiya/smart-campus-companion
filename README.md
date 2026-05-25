@@ -1,9 +1,10 @@
+<div align="center">
 
 
 # 🎓 Smart Campus Companion
 
-<<<<<<< HEAD
-**A Flutter mobile application that replaces fragmented WhatsApp chains with one official campus information system for ASTU students and staff.**
+ HEAD
+**A Flutter mobile application that replaces fragmented WhatsApp chains with one official campus information system for ASTU students and staff.** 
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-02569B?logo=flutter)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?logo=firebase)](https://firebase.google.com)
@@ -11,9 +12,8 @@
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 </div>
-=======
-> A Flutter mobile application that replaces fragmented Telegram chains with one official campus information system for ASTU students and staff.
->>>>>>> daf918b619fa3ec2b4b6dccde5ca6a2247ada066
+ A Flutter mobile application that replaces fragmented Telegram chains with one official campus information system for ASTU students and staff.
+
 
 ---
 
