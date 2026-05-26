@@ -406,14 +406,12 @@ flutter test
 
 ## Deliverables
 
-| Document | Description |
-|----------|-------------|
-| `Analysis & Requirements Document.docx` | User research, 13 survey responses, pain points, real-life scenarios, functional & non-functional requirements, user stories |
-| `Design Document.docx` | System architecture diagram, ERD (7 tables), UI/UX wireframe descriptions (7 screens), full API specification (19 endpoints) |
-| `Testing Documentation.docx` | 20 unit test cases, 12 integration test cases, 26 UAT test cases with pass/fail results |
-| `Final Presentation.pptx` | 10-slide presentation covering research, solution, demo, testing, innovation, and impact |
-
----
+| Document | Link |
+|----------|------|
+| 📄 Analysis & Requirements Document | [View](docs\Smart_Campus_Companion_Analysis_Document.pdf) |
+| 🎨 Design Document | [View](docs\Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
+| ✅ Testing Documentation | [View](docs/Smart_Campus_Companion_Testing_Document (1).pdf) |
+| 📊 Final Presentation | [View](docs/Smart_Campus_Companion_Presentation_final.pptx) |
 
 ## Firestore Collections
 
