@@ -401,15 +401,14 @@ flutter test
 | **Total** | **58** | **100% pass rate** |
 
 ---
-
 ## Deliverables
 
-| Document | Link |
-|----------|------|
-| 📄 Analysis & Requirements Document | [View](docs\Smart_Campus_Companion_Analysis_Document.pdf) |
-| 🎨 Design Document | [View](docs\Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
-| ✅ Testing Documentation | [View](docs/Smart_Campus_Companion_Testing_Document (1).pdf) |
-| 📊 Final Presentation | [View](docs/Smart_Campus_Companion_Presentation_final.pptx) |
+| Document | Description | Download |
+|----------|-------------|----------|
+| 📄 Analysis & Requirements Document | User research, pain points, scenarios, requirements, user stories | [⬇ Download](docs\Smart_Campus_Companion_Analysis_Document.pdf?raw=true) |
+| 🎨 Design Document | System architecture, ERD, wireframes, API specification | [⬇ Download](docs\Smart_Campus_Companion_Design_Document_with_Screenshots.pdf?raw=true) |
+| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](docs/Smart_Campus_Companion_Testing_Document.pdf?raw=true) |
+| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](docs/Final_Presentation.pptx?raw=true) |
 
 ## Firestore Collections
 
