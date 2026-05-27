@@ -12,8 +12,6 @@
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 </div>
- A Flutter mobile application that replaces fragmented Telegram chains with one official campus information system for ASTU students and staff.
-
 
 ---
 
