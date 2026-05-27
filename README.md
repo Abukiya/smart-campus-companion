@@ -41,13 +41,13 @@
 
 **Smart Campus Companion** is a mobile application built for **Adama Science and Technology University (ASTU)** as part of the Multi-Platform Software Development for Real-World Problems (CSE) final project.
 
-The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which relies entirely on class representatives forwarding messages through WhatsApp groups.
+The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which relies entirely on class representatives forwarding messages through Telegram groups.
 
 ---
 
 ## Research Background
 
-The project began with a deep study phase conducted during the final examination period. An online survey was distributed via WhatsApp and Telegram to avoid disrupting students.
+The project began with a deep study phase conducted during the final examination period. An online survey was distributed via Telegram to avoid disrupting students.
 
 | Metric | Result |
 |--------|--------|
