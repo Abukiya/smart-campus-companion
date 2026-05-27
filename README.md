@@ -11,6 +11,8 @@
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green)](https://flutter.dev)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
+> 📱 **[Download latest APK](https://github.com/Abukiya/smart-campus-companion/releases/latest/download/CampusCompanion_v1.0.0.apk)** — Android 5.0+
+
 </div>
 
 ---
