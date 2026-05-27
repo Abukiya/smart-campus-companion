@@ -39,9 +39,9 @@
 
 ## About the Project
 
-**Smart Campus Companion** is a mobile application built for **Adama Science and Technology University (ASTU)** as part of the Multi-Platform Software Development for Real-World Problems (CSE) final project.
+**Smart Campus Companion** is a mobile application built for **Adama Science and Technology University (ASTU)** as part of the Multi-Platform Software Development for Real-World Problems (CSE) fin[...]
 
-The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which relies entirely on class representatives forwarding messages through Telegram groups.
+The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which r[...]
 
 ---
 
@@ -407,8 +407,8 @@ flutter test
 |----------|-------------|----------|
 | 📄 Analysis & Requirements Document | User research, pain points, scenarios, requirements, user stories | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Analysis_Document.pdf) |
 | 🎨 Design Document | System architecture, ERD, wireframes, API specification | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
-| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Testing_Document (1).pdf) |
-| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/Smart_Campus_Companion_Presentation_final.ppt) |
+| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Testing_Document%20(1).pdf) |
+| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Presentation_final.pptx) |
 
 ## Firestore Collections
 
