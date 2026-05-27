@@ -58,7 +58,7 @@ The project began with a deep study phase conducted during the final examination
 | Staff willing to use an admin dashboard | **100%** |
 
 **Five key pain points identified:**
-1. No centralized information source — students rely on fragmented Telegram/WhatsApp groups
+1. No centralized information source — students rely on fragmented Telegram groups
 2. Class representative as single point of failure — 9/10 students depend on one person
 3. No real-time alerts — room changes discovered only upon arrival at wrong room
 4. Inaccessible staff contact information — *"we cannot get the phone numbers"*
