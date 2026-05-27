@@ -407,8 +407,8 @@ flutter test
 |----------|-------------|----------|
 | 📄 Analysis & Requirements Document | User research, pain points, scenarios, requirements, user stories | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Analysis_Document.pdf) |
 | 🎨 Design Document | System architecture, ERD, wireframes, API specification | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
-| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Testing_Document.pdf) |
-| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Final_Presentation.pptx) |
+| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](https://github.com/Abukiya/mart-campus-companion/raw/main/docs/Smart_Campus_Companion_Testing_Document.pdf) |
+| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](https://github.com/Abukiya/Smart_Campus_Companion_Presentation_final.ppt) |
 
 ## Firestore Collections
 
