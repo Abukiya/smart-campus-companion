@@ -3,17 +3,17 @@
 
 # 🎓 Smart Campus Companion
 
- HEAD
-**A Flutter mobile application that replaces fragmented WhatsApp chains with one official campus information system for ASTU students and staff.** 
+
+**A Flutter mobile application that replaces fragmented Telgram chains with one official campus information system for ASTU students and staff.** 
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.41.6-02569B?logo=flutter)](https://flutter.dev)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?logo=firebase)](https://firebase.google.com)
 [![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green)](https://flutter.dev)
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
-</div>
- A Flutter mobile application that replaces fragmented Telegram chains with one official campus information system for ASTU students and staff.
+> 📱 **[Download latest APK](https://github.com/Abukiya/smart-campus-companion/releases/latest/download/CampusCompanion_v1.0.0.apk)** — Android 5.0+
 
+</div>
 
 ---
 
@@ -41,13 +41,13 @@
 
 **Smart Campus Companion** is a mobile application built for **Adama Science and Technology University (ASTU)** as part of the Multi-Platform Software Development for Real-World Problems (CSE) final project.
 
-The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which relies entirely on class representatives forwarding messages through WhatsApp groups.
+The app solves a documented, research-backed problem: **90% of ASTU students have missed a class, quiz, or exam due to information failures** in the current campus communication system — which relies entirely on class representatives forwarding messages through Telegram groups.
 
 ---
 
 ## Research Background
 
-The project began with a deep study phase conducted during the final examination period. An online survey was distributed via WhatsApp and Telegram to avoid disrupting students.
+The project began with a deep study phase conducted during the final examination period. An online survey was distributed via Telegram to avoid disrupting students.
 
 | Metric | Result |
 |--------|--------|
@@ -58,7 +58,7 @@ The project began with a deep study phase conducted during the final examination
 | Staff willing to use an admin dashboard | **100%** |
 
 **Five key pain points identified:**
-1. No centralized information source — students rely on fragmented Telegram/WhatsApp groups
+1. No centralized information source — students rely on fragmented Telegram groups
 2. Class representative as single point of failure — 9/10 students depend on one person
 3. No real-time alerts — room changes discovered only upon arrival at wrong room
 4. Inaccessible staff contact information — *"we cannot get the phone numbers"*
@@ -401,15 +401,14 @@ flutter test
 | **Total** | **58** | **100% pass rate** |
 
 ---
-
 ## Deliverables
 
-| Document | Link |
-|----------|------|
-| 📄 Analysis & Requirements Document | [View](docs\Smart_Campus_Companion_Analysis_Document.pdf) |
-| 🎨 Design Document | [View](docs\Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
-| ✅ Testing Documentation | [View](docs/Smart_Campus_Companion_Testing_Document (1).pdf) |
-| 📊 Final Presentation | [View](docs/Smart_Campus_Companion_Presentation_final.pptx) |
+| Document | Description | Download |
+|----------|-------------|----------|
+| 📄 Analysis & Requirements Document | User research, pain points, scenarios, requirements, user stories | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Analysis_Document.pdf) |
+| 🎨 Design Document | System architecture, ERD, wireframes, API specification | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Design_Document_with_Screenshots.pdf) |
+| ✅ Testing Documentation | Unit tests, integration tests, UAT cases with results | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Testing_Document%20(1).pdf) |
+| 📊 Final Presentation | 10-slide presentation — research, demo, testing, impact | [⬇ Download](https://github.com/Abukiya/smart-campus-companion/raw/main/docs/Smart_Campus_Companion_Presentation_final.pptx) |
 
 ## Firestore Collections
 
